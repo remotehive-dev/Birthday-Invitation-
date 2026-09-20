@@ -1,0 +1,13 @@
+# Robots Exclusion Protocol for Princess Pratishtha Tiwari's Birthday Sanctuary
+# All search engine spiders, scrapers, and AI crawlers are strictly prohibited from indexing or harvesting assets.
+
+User-agent: *
+Disallow: /
+Disallow: /*.jpg
+Disallow: /*.jpeg
+Disallow: /*.png
+Disallow: /*.heic
+Disallow: /*.heif
+Disallow: /*.webp
+Disallow: /*.js
+Disallow: /*.json

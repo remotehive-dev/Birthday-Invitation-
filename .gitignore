@@ -1,0 +1,24 @@
+# Temporary & Scratch Dumps (Protect Personal Details)
+*_sample.html
+*.json.bak
+extracted_albums.json
+albums_clean.json
+parse_embed.py
+sync_insta.py
+test_*.py
+*.log
+*.heic
+*.HEIC
+*.heif
+*.HEIF
+
+# Operating System & IDE Artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+
+# Local Test Media
+section_screenshot.png
