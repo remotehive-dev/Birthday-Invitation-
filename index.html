@@ -610,7 +610,7 @@
                     <i class="fa-solid fa-crown text-xs text-royalGold mr-1"></i>
                     <span>October 16, 2000</span>
                 </span>
-                <button onclick="downloadCalendarICS()" class="text-xs px-3 py-1.5 rounded-full gold-badge hover:opacity-90 transition-all flex items-center space-x-1 shadow-md">
+                <button onclick="openCalendarSyncModal()" class="text-xs px-3 py-1.5 rounded-full gold-badge hover:opacity-90 transition-all flex items-center space-x-1 shadow-md">
                     <i class="fa-solid fa-calendar-plus text-xs"></i>
                     <span class="hidden md:inline">Save Reminders</span>
                 </button>
@@ -2190,13 +2190,25 @@
                 </div>
 
                 <form id="rsvpForm" onsubmit="submitRSVP(event)" class="space-y-5 scroll-fx stagger-2">
-                    <!-- Guest Name -->
-                    <div>
-                        <label for="guestNameInput" class="block text-xs uppercase tracking-wider text-royalGold font-semibold mb-2">
-                            <i class="fa-solid fa-user-tag mr-1"></i> Your Full Name <span class="text-red-400">*</span>
-                        </label>
-                        <input type="text" id="guestNameInput" required placeholder="e.g. Priyansh Sharma &amp; Family" 
-                            class="w-full px-4 py-3 rounded-xl bg-fuchsiaDarkest/80 border border-royalGold/40 text-white placeholder-pink-300/40 focus:outline-none focus:border-royalGold transition-all text-sm">
+                    <!-- Guest Name & Mobile Number Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Guest Name -->
+                        <div>
+                            <label for="guestNameInput" class="block text-xs uppercase tracking-wider text-royalGold font-semibold mb-2">
+                                <i class="fa-solid fa-user-tag mr-1"></i> Your Full Name <span class="text-red-400">*</span>
+                            </label>
+                            <input type="text" id="guestNameInput" required placeholder="e.g. Priyansh Sharma &amp; Family" 
+                                class="w-full px-4 py-3 rounded-xl bg-fuchsiaDarkest/80 border border-royalGold/40 text-white placeholder-pink-300/40 focus:outline-none focus:border-royalGold transition-all text-sm">
+                        </div>
+
+                        <!-- Mobile Number -->
+                        <div>
+                            <label for="guestPhoneInput" class="block text-xs uppercase tracking-wider text-royalGold font-semibold mb-2">
+                                <i class="fa-solid fa-phone mr-1"></i> Mobile / WhatsApp Number <span class="text-red-400">*</span>
+                            </label>
+                            <input type="tel" id="guestPhoneInput" required maxlength="10" placeholder="e.g. 9876543210 (10 digits)" 
+                                class="w-full px-4 py-3 rounded-xl bg-fuchsiaDarkest/80 border border-royalGold/40 text-white placeholder-pink-300/40 focus:outline-none focus:border-royalGold transition-all text-sm">
+                        </div>
                     </div>
 
                     <!-- Expected Number of Guests & Dresscode Grid -->
@@ -2297,14 +2309,18 @@
                             </div>
                             <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-royalGold/20 text-royalGold border border-royalGold/40" id="previewPassSerial">ROYAL-KNPR-2026</span>
                         </div>
-                        <div class="grid grid-cols-2 gap-3 my-3 text-xs">
+                        <div class="grid grid-cols-3 gap-2 my-3 text-xs">
                             <div>
                                 <span class="text-[10px] uppercase text-pink-300/70 block">Admit</span>
                                 <span class="font-semibold text-white" id="previewGuestCount">1 Guest</span>
                             </div>
                             <div>
-                                <span class="text-[10px] uppercase text-pink-300/70 block">Dress Code Suggestion</span>
-                                <span class="font-semibold text-royalGold" id="previewDressCode">Royal Pink &amp; Gold</span>
+                                <span class="text-[10px] uppercase text-pink-300/70 block">Mobile</span>
+                                <span class="font-semibold text-royalGold font-mono text-[11px]" id="previewGuestPhone">--</span>
+                            </div>
+                            <div>
+                                <span class="text-[10px] uppercase text-pink-300/70 block">Dress Code</span>
+                                <span class="font-semibold text-royalGold truncate block" id="previewDressCode">Royal Pink &amp; Gold</span>
                             </div>
                         </div>
                         <div class="pt-2 border-t border-royalGold/20 text-[11px] text-pink-200/90 flex items-center justify-between">
@@ -2330,7 +2346,7 @@
                             <span>Print Pass / Share with Family</span>
                         </button>
                         
-                        <button onclick="downloadCalendarICS()" class="w-full py-3 px-4 rounded-xl bg-transparent border border-pink-400/40 text-pink-200 hover:text-white hover:border-pink-300 transition-all flex items-center justify-center space-x-2 text-xs">
+                        <button onclick="openCalendarSyncModal()" class="w-full py-3 px-4 rounded-xl bg-transparent border border-pink-400/40 text-pink-200 hover:text-white hover:border-pink-300 transition-all flex items-center justify-center space-x-2 text-xs">
                             <i class="fa-solid fa-calendar-star text-sm"></i>
                             <span>Add Birthday Reminders to Phone Calendar</span>
                         </button>
@@ -2383,19 +2399,23 @@
                                 Honored Guest &amp; Family
                             </div>
                             
-                            <!-- Badges Grid: Admit Count, Dress Code, Serial ID -->
-                            <div style="display: flex; justify-content: space-around; align-items: stretch; gap: 10px; padding-top: 8px; border-top: 1px solid rgba(255, 215, 0, 0.25);">
-                                <div style="flex: 1; background: rgba(74, 14, 46, 0.6); padding: 8px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
-                                    <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #F48FB1;">Admit Headcount</div>
-                                    <div id="pdfGuestCountText" style="font-size: 13px; font-weight: 700; color: #FFFFFF; margin-top: 2px;">1 Royal Guest</div>
+                            <!-- Badges Grid: Admit Count, Phone, Dress Code, Serial ID -->
+                            <div style="display: flex; justify-content: space-around; align-items: stretch; gap: 8px; padding-top: 8px; border-top: 1px solid rgba(255, 215, 0, 0.25);">
+                                <div style="flex: 1; background: rgba(74, 14, 46, 0.6); padding: 7px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
+                                    <div style="font-size: 8px; text-transform: uppercase; letter-spacing: 1px; color: #F48FB1;">Admit Count</div>
+                                    <div id="pdfGuestCountText" style="font-size: 12px; font-weight: 700; color: #FFFFFF; margin-top: 2px;">1 Royal Guest</div>
                                 </div>
-                                <div style="flex: 1.4; background: rgba(74, 14, 46, 0.6); padding: 8px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
-                                    <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #F48FB1;">Dress Code Suggestion</div>
-                                    <div id="pdfDressCodeText" style="font-size: 12px; font-weight: 700; color: #FFD700; margin-top: 2px;">Royal Ethnic / Elegance</div>
+                                <div style="flex: 1.1; background: rgba(74, 14, 46, 0.6); padding: 7px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
+                                    <div style="font-size: 8px; text-transform: uppercase; letter-spacing: 1px; color: #F48FB1;">Guest Mobile</div>
+                                    <div id="pdfGuestPhoneText" style="font-size: 11px; font-family: monospace; font-weight: 700; color: #FFF8DC; margin-top: 2px;">+91-XXXXXXXXXX</div>
                                 </div>
-                                <div style="flex: 1.2; background: rgba(74, 14, 46, 0.6); padding: 8px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
-                                    <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #F48FB1;">VIP Pass ID</div>
-                                    <div id="pdfPassIdText" style="font-size: 12px; font-family: monospace; font-weight: 700; color: #FFF8DC; margin-top: 2px;">ROYAL-KNPR-2026</div>
+                                <div style="flex: 1.3; background: rgba(74, 14, 46, 0.6); padding: 7px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
+                                    <div style="font-size: 8px; text-transform: uppercase; letter-spacing: 1px; color: #F48FB1;">Dress Code</div>
+                                    <div id="pdfDressCodeText" style="font-size: 11px; font-weight: 700; color: #FFD700; margin-top: 2px;">Royal Ethnic / Elegance</div>
+                                </div>
+                                <div style="flex: 1.1; background: rgba(74, 14, 46, 0.6); padding: 7px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
+                                    <div style="font-size: 8px; text-transform: uppercase; letter-spacing: 1px; color: #F48FB1;">VIP Pass ID</div>
+                                    <div id="pdfPassIdText" style="font-size: 11px; font-family: monospace; font-weight: 700; color: #FFF8DC; margin-top: 2px;">ROYAL-KNPR-2026</div>
                                 </div>
                             </div>
                         </div>
@@ -2420,7 +2440,7 @@
                                 </div>
                                 <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: #F48FB1; font-weight: 600;">OFFICIAL ROYAL RESIDENCE &amp; CELEBRATION VENUE:</div>
                                 <div style="font-family: 'Playfair Display', serif; font-size: 13px; font-weight: 700; color: #FFFFFF; line-height: 1.35; margin-top: 3px;">
-                                    126/9 A, S-Block, Govindnagar Kanpur Uttar pradesh , 208014
+                                    126/9 A, S-Block, Govindnagar Kanpur Uttar pradesh , 208006
                                 </div>
                                 <div style="font-size: 9px; color: #F8BBD0; margin-top: 4px;">
                                     Maps Deep Link: <span style="color: #FFD700;">https://maps.app.goo.gl/eGNrsnMAKRCKicHu7</span>
@@ -2701,26 +2721,136 @@
         </div>
     </div>
 
-    <!-- Calendar Prompt Modal -->
-    <div id="calendarPromptModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-3xl p-6 md:p-8 text-center border-2 border-royalGold shadow-2xl relative">
-            <div class="w-16 h-16 bg-royalGold/20 border-2 border-royalGold rounded-full flex items-center justify-center mx-auto mb-4 text-royalGold text-2xl animate-bounce">
-                <i class="fa-solid fa-calendar-star"></i>
+    <!-- Duplicate RSVP Prevention Modal -->
+    <div id="duplicateRsvpModal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 hidden">
+        <div class="glass-card max-w-md w-full p-6 md:p-8 rounded-3xl border-2 border-royalGold text-center shadow-[0_0_50px_rgba(255,215,0,0.35)] relative">
+            <button onclick="closeDuplicateRSVPModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-pink-200 hover:text-white flex items-center justify-center transition-all">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="w-16 h-16 rounded-full bg-royalGold/20 border-2 border-royalGold text-royalGold flex items-center justify-center mx-auto mb-4 text-2xl shadow-lg">
+                <i class="fa-solid fa-id-card-clip"></i>
             </div>
-            <h4 class="text-2xl font-royal text-royalGold mb-2 font-bold">Add Birthday Reminders</h4>
-            <p class="text-xs md:text-sm text-pink-200 mb-6 leading-relaxed">
-                Never miss Princess Pratishtha Tiwari's birthday in Kanpur! Sync automatic reminders directly to your phone calendar.
-                <br><br>
-                <span class="text-royalGold text-xs font-semibold block bg-fuchsiaDarkest/60 p-2.5 rounded-lg border border-royalGold/30">
-                    ⏰ Daily reminder from Oct 13th &amp; every 6 hours on Oct 15th!
-                </span>
+
+            <span class="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-royalGold/20 text-royalGold border border-royalGold/40 inline-block mb-2">
+                PRIOR REGISTRATION FOUND
+            </span>
+
+            <h3 class="text-xl md:text-2xl font-royal text-royalGold font-bold mb-2">We Have Already Received Your RSVP!</h3>
+            
+            <p class="text-xs md:text-sm text-pink-100/90 leading-relaxed mb-4">
+                Honored guest <strong id="duplicateGuestName" class="text-royalGold">Guest</strong>, our royal court records confirm that an official RSVP pass has already been decreed for you!
             </p>
+
+            <!-- Pass Information Summary Box -->
+            <div class="bg-fuchsiaDarkest/80 border border-royalGold/40 rounded-xl p-4 text-left text-xs mb-5 space-y-2">
+                <div class="flex justify-between items-center border-b border-royalGold/20 pb-2">
+                    <span class="text-pink-300/80">VIP Pass Serial:</span>
+                    <span id="duplicatePassSerial" class="font-mono text-royalGold font-bold">ROYAL-KNPR-2026</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-royalGold/20 pb-2">
+                    <span class="text-pink-300/80">Registered Mobile:</span>
+                    <span id="duplicatePhone" class="font-mono text-white">--</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-royalGold/20 pb-2">
+                    <span class="text-pink-300/80">Admit Headcount:</span>
+                    <span id="duplicateCount" class="text-white font-semibold">1 Guest</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-pink-300/80">Decreed On:</span>
+                    <span id="duplicateDate" class="text-pink-200">--</span>
+                </div>
+            </div>
+
             <div class="space-y-3">
-                <button onclick="downloadCalendarICS(); dismissReminderModal();" class="w-full py-3.5 rounded-xl gold-badge font-bold shadow-lg text-sm">
-                    <i class="fa-solid fa-check mr-1.5"></i> Yes, Sync Reminders Now
+                <button id="downloadDuplicatePassBtn" onclick="downloadExistingGuestPassPdf()" class="w-full py-3.5 px-4 rounded-xl gold-badge text-fuchsiaDarkest font-bold text-sm shadow-xl flex items-center justify-center space-x-2 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer">
+                    <i class="fa-solid fa-file-pdf text-base"></i>
+                    <span>Download Invitation Letter</span>
                 </button>
-                <button onclick="dismissReminderModal()" class="w-full py-2.5 rounded-xl bg-transparent border border-royalGold/40 text-pink-200 text-xs hover:bg-white/5 transition-all">
-                    Maybe Later
+
+                <button onclick="closeDuplicateRSVPModal()" class="w-full py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/15 text-pink-200 hover:text-white text-xs font-semibold transition-all">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Smart Cross-Device Calendar Modal (iOS, Android, Mac, Windows) -->
+    <div id="calendarPromptModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full rounded-3xl p-6 md:p-8 text-center border-2 border-royalGold shadow-[0_0_50px_rgba(255,215,0,0.3)] relative">
+            <button onclick="dismissReminderModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-pink-200 hover:text-white flex items-center justify-center transition-all">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="w-16 h-16 bg-royalGold/20 border-2 border-royalGold rounded-full flex items-center justify-center mx-auto mb-4 text-royalGold text-2xl shadow-lg">
+                <i class="fa-solid fa-calendar-check animate-pulse"></i>
+            </div>
+
+            <!-- Device Detection Badge -->
+            <div class="mb-3">
+                <span id="calendarDeviceBadge" class="text-[11px] font-bold uppercase tracking-wider px-3.5 py-1 rounded-full bg-royalGold/20 text-royalGold border border-royalGold/40 inline-flex items-center space-x-1">
+                    <i class="fa-solid fa-mobile-screen-button mr-1"></i> Smart Device Sync
+                </span>
+            </div>
+
+            <h4 class="text-2xl font-royal text-royalGold mb-2 font-bold">Sync Birthday Reminders</h4>
+            <p class="text-xs text-pink-200/90 mb-4 leading-relaxed">
+                Add Princess Pratishtha Tiwari's birthday celebration in Kanpur to your device calendar with automated reminder alarms:
+            </p>
+
+            <!-- Reminder Schedule Highlights -->
+            <div class="bg-fuchsiaDarkest/80 border border-royalGold/30 rounded-xl p-3 text-left text-xs mb-5 space-y-1.5">
+                <div class="flex items-center space-x-2 text-pink-100">
+                    <i class="fa-solid fa-bell text-royalGold text-xs"></i>
+                    <span><strong>13 Oct:</strong> Daily countdown alert starts (-3 days)</span>
+                </div>
+                <div class="flex items-center space-x-2 text-pink-100">
+                    <i class="fa-solid fa-bell text-royalGold text-xs"></i>
+                    <span><strong>14 Oct:</strong> 48-Hour celebration reminder (-2 days)</span>
+                </div>
+                <div class="flex items-center space-x-2 text-pink-100">
+                    <i class="fa-solid fa-bolt text-royalGold text-xs"></i>
+                    <span><strong>15 Oct:</strong> Every 6 hours countdown alert!</span>
+                </div>
+                <div class="flex items-center space-x-2 text-pink-100">
+                    <i class="fa-solid fa-crown text-royalGold text-xs"></i>
+                    <span><strong>16 Oct:</strong> 2 Hours prior venue departure notification</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons: Primary auto-selected by OS, plus manual alternatives -->
+            <div class="space-y-2.5">
+                <!-- 1-Tap Primary Action (Auto-adapted to iOS / Android / Windows / Mac) -->
+                <button id="calendarPrimaryActionBtn" onclick="syncCalendarForDevice('auto'); dismissReminderModal();" class="w-full py-3.5 px-4 rounded-xl gold-badge font-bold shadow-xl text-sm flex items-center justify-center space-x-2 hover:scale-[1.02] active:scale-95 transition-all text-fuchsiaDarkest cursor-pointer">
+                    <i class="fa-solid fa-calendar-plus text-base"></i>
+                    <span id="calendarPrimaryActionText">Add to Calendar (1-Tap Sync)</span>
+                </button>
+
+                <!-- Platform Specific Alternative Buttons Grid -->
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                    <button onclick="syncCalendarForDevice('google'); dismissReminderModal();" class="py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold flex items-center justify-center space-x-1.5 transition-all cursor-pointer">
+                        <i class="fa-brands fa-google text-yellow-400"></i>
+                        <span>Google Calendar</span>
+                    </button>
+                    <button onclick="syncCalendarForDevice('apple'); dismissReminderModal();" class="py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold flex items-center justify-center space-x-1.5 transition-all cursor-pointer">
+                        <i class="fa-brands fa-apple text-pink-200"></i>
+                        <span>Apple / .ICS</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="syncCalendarForDevice('outlook'); dismissReminderModal();" class="py-2 px-3 rounded-xl bg-fuchsiaDarkest/60 hover:bg-fuchsiaDarkest border border-royalGold/30 text-pink-200 hover:text-white text-[11px] flex items-center justify-center space-x-1.5 transition-all cursor-pointer">
+                        <i class="fa-brands fa-microsoft text-blue-400"></i>
+                        <span>Outlook Calendar</span>
+                    </button>
+                    <button onclick="syncCalendarForDevice('ics'); dismissReminderModal();" class="py-2 px-3 rounded-xl bg-fuchsiaDarkest/60 hover:bg-fuchsiaDarkest border border-royalGold/30 text-pink-200 hover:text-white text-[11px] flex items-center justify-center space-x-1.5 transition-all cursor-pointer">
+                        <i class="fa-solid fa-download text-royalGold"></i>
+                        <span>Download .ICS</span>
+                    </button>
+                </div>
+
+                <button onclick="dismissReminderModal()" class="w-full py-2 text-pink-300/70 hover:text-white text-xs transition-all pt-1 cursor-pointer">
+                    Dismiss
                 </button>
             </div>
         </div>
@@ -2920,7 +3050,6 @@
                 authGate.classList.add('hidden');
                 dashboard.classList.remove('hidden');
                 refreshAdminDashboard();
-            startGrandLandingIntro();
             } else {
                 authGate.classList.remove('hidden');
                 dashboard.classList.add('hidden');
@@ -3031,7 +3160,7 @@
 
         // Clipboard copy for Venue Address
         function copyVenueAddress() {
-            const address = "126/9 A, S-Block, Govindnagar Kanpur Uttar pradesh , 208014";
+            const address = "126/9 A, S-Block, Govindnagar Kanpur Uttar pradesh , 208006";
             navigator.clipboard.writeText(address).then(() => {
                 const btnText = document.getElementById('copyVenueBtnText');
                 const original = btnText.innerText;
@@ -3046,9 +3175,44 @@
         // Current generated pass state for re-downloads
         window.currentGeneratedPass = null;
 
+        let pendingDuplicateGuest = null;
+
+        function showDuplicateRSVPModal(existingGuest) {
+            pendingDuplicateGuest = existingGuest;
+            const nameEl = document.getElementById('duplicateGuestName');
+            const passEl = document.getElementById('duplicatePassSerial');
+            const phoneEl = document.getElementById('duplicatePhone');
+            const countEl = document.getElementById('duplicateCount');
+            const dateEl = document.getElementById('duplicateDate');
+
+            if (nameEl) nameEl.innerText = existingGuest.name;
+            if (passEl) passEl.innerText = existingGuest.passId || 'ROYAL-KNPR-2026';
+            if (phoneEl) phoneEl.innerText = existingGuest.phone ? `+91 ${existingGuest.phone}` : 'Registered';
+            if (countEl) countEl.innerText = `${existingGuest.guestsCount || 1} Royal Guest(s)`;
+            if (dateEl) dateEl.innerText = existingGuest.date || 'Earlier';
+
+            const modal = document.getElementById('duplicateRsvpModal');
+            if (modal) modal.classList.remove('hidden');
+            playRoyalChime();
+        }
+
+        function closeDuplicateRSVPModal() {
+            const modal = document.getElementById('duplicateRsvpModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function downloadExistingGuestPassPdf() {
+            if (!pendingDuplicateGuest) return;
+            window.currentGeneratedPass = pendingDuplicateGuest;
+            populatePdfTemplate(pendingDuplicateGuest);
+            generateAndDownloadPassPdf(pendingDuplicateGuest.name, pendingDuplicateGuest.passId);
+            closeDuplicateRSVPModal();
+        }
+
         function submitRSVP(event) {
             event.preventDefault();
             const name = document.getElementById('guestNameInput').value.trim();
+            const phone = document.getElementById('guestPhoneInput').value.trim();
             const guestsCount = parseInt(document.getElementById('guestCountInput').value, 10) || 1;
             const dressCode = document.getElementById('guestDressCodeInput').value.trim() || 'Royal Elegance / Ethnic Attire';
             const agreed = document.getElementById('disclosureCheckbox').checked;
@@ -3058,8 +3222,27 @@
                 return;
             }
 
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            if (cleanPhone.length !== 10) {
+                displayAlertBox("Invalid Mobile", "Please enter a valid 10-digit mobile / WhatsApp number.", true);
+                return;
+            }
+
             if (!agreed) {
                 displayAlertBox("Court Summons Decree", "You must accept the Mandatory Court Summons to confirm your attendance!", true);
+                return;
+            }
+
+            // Strict De-duplication Check (By Phone OR By Name)
+            const normalizedName = name.toLowerCase().trim();
+            const existingGuest = guestList.find(g => {
+                const gPhone = (g.phone || '').replace(/[^0-9]/g, '');
+                const gName = (g.name || '').toLowerCase().trim();
+                return (gPhone && gPhone === cleanPhone) || (gName && gName === normalizedName);
+            });
+
+            if (existingGuest) {
+                showDuplicateRSVPModal(existingGuest);
                 return;
             }
 
@@ -3070,6 +3253,7 @@
             const guestRecord = {
                 id: Date.now(),
                 name: name,
+                phone: cleanPhone,
                 guestsCount: guestsCount,
                 dressCode: dressCode,
                 passId: passSerial,
@@ -3093,6 +3277,8 @@
             document.getElementById('previewGuestName').innerText = name;
             document.getElementById('previewPassSerial').innerText = passSerial;
             document.getElementById('previewGuestCount').innerText = `${guestsCount} Guest${guestsCount > 1 ? 's' : ''}`;
+            const previewPhoneEl = document.getElementById('previewGuestPhone');
+            if (previewPhoneEl) previewPhoneEl.innerText = `+91 ${cleanPhone}`;
             document.getElementById('previewDressCode').innerText = dressCode;
 
             // Populate hidden PDF template DOM
@@ -3108,11 +3294,13 @@
 
         function populatePdfTemplate(record) {
             const nameEl = document.getElementById('pdfGuestNameText');
+            const phoneEl = document.getElementById('pdfGuestPhoneText');
             const countEl = document.getElementById('pdfGuestCountText');
             const dressEl = document.getElementById('pdfDressCodeText');
             const passEl = document.getElementById('pdfPassIdText');
 
             if (nameEl) nameEl.innerText = record.name;
+            if (phoneEl) phoneEl.innerText = record.phone ? `+91-${record.phone}` : 'N/A';
             if (countEl) countEl.innerText = `${record.guestsCount} Royal Guest${record.guestsCount > 1 ? 's' : ''}`;
             if (dressEl) dressEl.innerText = record.dressCode;
             if (passEl) passEl.innerText = record.passId;
@@ -3359,6 +3547,7 @@
                                 </div>
                                 <div class="flex flex-wrap items-center gap-3 text-[11px] text-pink-200/80">
                                     <span><i class="fa-solid fa-users text-royalGold mr-1"></i><strong>${count}</strong> Guest${count > 1 ? 's' : ''}</span>
+                                    <span><i class="fa-solid fa-phone text-royalGold mr-1"></i><strong>${g.phone ? '+91 ' + g.phone : 'N/A'}</strong></span>
                                     <span><i class="fa-solid fa-vest-patches text-purple-300 mr-1"></i>Theme: <strong class="text-royalGold">${dress}</strong></span>
                                     <span class="text-pink-300/60"><i class="fa-regular fa-clock mr-1"></i>${g.date}</span>
                                 </div>
@@ -3493,10 +3682,11 @@
                 return;
             }
 
-            const header = ["ID", "Guest Name", "Status", "Headcount", "Dress Code Suggestion", "VIP Pass ID", "Submission Date"];
+            const header = ["ID", "Guest Name", "Mobile Number", "Status", "Headcount", "Dress Code Suggestion", "VIP Pass ID", "Submission Date"];
             const rows = guestList.map(g => [
                 g.id,
                 `"${(g.name || '').replace(/"/g, '""')}"`,
+                `"${(g.phone || '').replace(/"/g, '""')}"`,
                 g.status || 'Accepted',
                 g.guestsCount || 1,
                 `"${(g.dressCode || '').replace(/"/g, '""')}"`,
@@ -3551,31 +3741,79 @@
             }
         }
 
-        function downloadCalendarICS() {
-            // Target Birthday: October 16th
-            const icsFileLines = [
+        // ====================================================
+        // CROSS-DEVICE SMART CALENDAR ENGINE (iOS, Android, Mac, Windows)
+        // ====================================================
+        function detectUserDevice() {
+            const ua = navigator.userAgent || navigator.vendor || window.opera || '';
+            const platform = navigator.platform || '';
+            
+            const isIOS = (/iPad|iPhone|iPod/.test(ua) || (platform === 'MacIntel' && navigator.maxTouchPoints > 1)) && !window.MSStream;
+            const isMac = /Macintosh|Mac OS X/.test(ua) && !isIOS;
+            const isAndroid = /Android/.test(ua);
+            const isWindows = /Windows|Win32|Win64/.test(ua);
+            
+            let deviceType = 'generic';
+            if (isIOS) deviceType = 'ios';
+            else if (isAndroid) deviceType = 'android';
+            else if (isMac) deviceType = 'mac';
+            else if (isWindows) deviceType = 'windows';
+
+            return { isIOS, isAndroid, isMac, isWindows, deviceType };
+        }
+
+        function getGoogleCalendarUrl() {
+            const title = encodeURIComponent("👑 Princess Pratishtha Tiwari's Royal Birthday Celebration!");
+            const dates = "20261016T133000Z/20261016T180000Z"; // 7:00 PM to 11:30 PM IST (UTC 13:30 to 18:00)
+            const details = encodeURIComponent(
+                "You are cordially summoned to celebrate the 26th Royal Birthday Jubilation of Crown Princess Pratishtha Tiwari in Govindnagar, Kanpur!\n\n" +
+                "📍 Venue: 126/9 A, S-Block, Govindnagar Kanpur Uttar pradesh, 208006\n" +
+                "🗺️ GPS Route: https://maps.app.goo.gl/eGNrsnMAKRCKicHu7\n" +
+                "👗 Dress Code: Royal Elegance / Ethnic Attire\n" +
+                "❤️ Host & Groom: Ranjeet Tiwari\n\n" +
+                "⏰ Countdown Alarms Active: Daily from Oct 13th & Every 6 hours on Oct 15th!"
+            );
+            const location = encodeURIComponent("126/9 A, S-Block, Govindnagar Kanpur Uttar pradesh , 208006");
+            return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${location}`;
+        }
+
+        function getOutlookWebCalendarUrl() {
+            const title = encodeURIComponent("👑 Princess Pratishtha Tiwari's Royal Birthday Celebration!");
+            const start = "2026-10-16T19:00:00+05:30";
+            const end = "2026-10-16T23:30:00+05:30";
+            const details = encodeURIComponent(
+                "You are cordially summoned to celebrate the 26th Birthday of Crown Princess Pratishtha Tiwari in Kanpur!\n" +
+                "Venue: 126/9 A, S-Block, Govindnagar Kanpur. Map: https://maps.app.goo.gl/eGNrsnMAKRCKicHu7"
+            );
+            const location = encodeURIComponent("126/9 A, S-Block, Govindnagar Kanpur Uttar pradesh , 208006");
+            return `https://outlook.live.com/calendar/0/deeplink/compose?subject=${title}&startdt=${encodeURIComponent(start)}&enddt=${encodeURIComponent(end)}&body=${details}&location=${location}`;
+        }
+
+        function generateICSContent() {
+            return [
                 "BEGIN:VCALENDAR",
                 "VERSION:2.0",
-                "PRODID:-//Pratishtha Birthday Celebration//Kanpur//EN",
+                "PRODID:-//Princess Pratishtha Birthday//Kanpur//EN",
                 "CALSCALE:GREGORIAN",
                 "METHOD:PUBLISH",
                 "BEGIN:VEVENT",
-                "UID:pratishtha-birthday-oct16@kanpur.party",
-                "SUMMARY:Princess Pratishtha Tiwari's Birthday Celebration! 🎂",
-                "DESCRIPTION:You are cordially invited to celebrate the birthday of Pratishtha Tiwari in Kanpur! Stay tuned for updates on dress code and venue.\\nCrafted with endless love by Ranjeet Tiwari.",
-                "LOCATION:Kanpur, Uttar Pradesh, India",
-                "DTSTART:20261016T130000Z",
-                "DTEND:20261016T183000Z",
-                // Reminder 1: Starting Oct 13th Daily Reminder (-3 days)
+                "UID:pratishtha-royal-birthday-2026-oct16@kanpur.party",
+                "SUMMARY:👑 Princess Pratishtha Tiwari's Royal Birthday Celebration!",
+                "DESCRIPTION:You are cordially summoned to celebrate the 26th Birthday Celebration of Crown Princess Pratishtha Tiwari in Kanpur! Venue: 126/9 A, S-Block, Govindnagar Kanpur. Map: https://maps.app.goo.gl/eGNrsnMAKRCKicHu7. Crafted with endless love by Ranjeet Tiwari.",
+                "LOCATION:126/9 A, S-Block, Govindnagar Kanpur Uttar pradesh , 208006",
+                "DTSTART:20261016T133000Z",
+                "DTEND:20261016T180000Z",
+                "STATUS:CONFIRMED",
+                // Reminder 1: Oct 13th Daily Alert (-3 days)
                 "BEGIN:VALARM",
                 "TRIGGER:-P3D",
-                "DESCRIPTION:Daily Reminder: Pratishtha Tiwari's Birthday is coming up on 16th October in Kanpur!",
+                "DESCRIPTION:Daily Countdown: Princess Pratishtha Tiwari's Birthday is in 3 days in Kanpur!",
                 "ACTION:DISPLAY",
                 "END:VALARM",
                 // Reminder 2: Oct 14th (-2 days)
                 "BEGIN:VALARM",
                 "TRIGGER:-P2D",
-                "DESCRIPTION:Reminder: Only 2 days left for Pratishtha Tiwari's Birthday Celebration in Kanpur!",
+                "DESCRIPTION:Royal Reminder: Only 2 days left for Princess Pratishtha Tiwari's Birthday Celebration in Kanpur!",
                 "ACTION:DISPLAY",
                 "END:VALARM",
                 // Reminder 3: Oct 15th Every 6 Hours
@@ -3583,22 +3821,109 @@
                 "TRIGGER:-P1D",
                 "REPEAT:4",
                 "DURATION:PT6H",
-                "DESCRIPTION:6-Hour Countdown: Pratishtha Tiwari's Birthday celebration is tomorrow in Kanpur!",
+                "DESCRIPTION:6-Hour Countdown: Princess Pratishtha Tiwari's Birthday celebration is tomorrow in Kanpur!",
+                "ACTION:DISPLAY",
+                "END:VALARM",
+                // Reminder 4: Day of Celebration 2 Hours Prior
+                "BEGIN:VALARM",
+                "TRIGGER:-PT2H",
+                "DESCRIPTION:Departure Alert: Princess Pratishtha Tiwari's Royal Gala starts in 2 hours in Govindnagar, Kanpur!",
                 "ACTION:DISPLAY",
                 "END:VALARM",
                 "END:VEVENT",
                 "END:VCALENDAR"
             ].join("\r\n");
+        }
 
-            const blob = new Blob([icsFileLines], { type: 'text/calendar;charset=utf-8' });
+        function downloadCalendarICS() {
+            const icsContent = generateICSContent();
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
             const downloadUrl = window.URL.createObjectURL(blob);
             const anchor = document.createElement('a');
             anchor.href = downloadUrl;
-            anchor.download = 'Pratishtha_Tiwari_Birthday_Kanpur.ics';
+            anchor.download = 'Princess_Pratishtha_Tiwari_Royal_Birthday_Kanpur.ics';
             document.body.appendChild(anchor);
             anchor.click();
-            document.body.removeChild(anchor);
-            window.URL.revokeObjectURL(downloadUrl);
+            setTimeout(() => {
+                document.body.removeChild(anchor);
+                window.URL.revokeObjectURL(downloadUrl);
+            }, 600);
+        }
+
+        function syncCalendarForDevice(actionType) {
+            const device = detectUserDevice();
+            
+            if (actionType === 'auto') {
+                if (device.isAndroid) {
+                    actionType = 'google';
+                } else if (device.isIOS || device.isMac) {
+                    actionType = 'apple';
+                } else {
+                    actionType = 'google';
+                }
+            }
+
+            if (actionType === 'google') {
+                // Direct Google Calendar intent / web link (Standard on Android & Web)
+                window.open(getGoogleCalendarUrl(), '_blank');
+            } else if (actionType === 'apple') {
+                // Native Apple Calendar (.ics handler on iOS Safari / macOS)
+                if (device.isIOS) {
+                    // On iOS, navigate to direct ICS download so Apple Calendar prompts
+                    const icsString = generateICSContent();
+                    const blob = new Blob([icsString], { type: 'text/calendar;charset=utf-8' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'Princess_Pratishtha_Birthday_Kanpur.ics';
+                    document.body.appendChild(a);
+                    a.click();
+                    setTimeout(() => {
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                    }, 800);
+                } else {
+                    downloadCalendarICS();
+                }
+            } else if (actionType === 'outlook') {
+                window.open(getOutlookWebCalendarUrl(), '_blank');
+            } else {
+                downloadCalendarICS();
+            }
+        }
+
+        function openCalendarSyncModal() {
+            const modal = document.getElementById('calendarPromptModal');
+            if (!modal) return;
+            
+            const device = detectUserDevice();
+            const badge = document.getElementById('calendarDeviceBadge');
+            const primaryBtn = document.getElementById('calendarPrimaryActionBtn');
+            const primaryText = document.getElementById('calendarPrimaryActionText');
+            
+            if (device.isIOS) {
+                if (badge) badge.innerHTML = `<i class="fa-brands fa-apple mr-1"></i> iPhone / Apple Device Detected`;
+                if (primaryText) primaryText.innerText = "Add to Apple Calendar (Native iOS)";
+                if (primaryBtn) primaryBtn.onclick = () => { syncCalendarForDevice('apple'); dismissReminderModal(); };
+            } else if (device.isAndroid) {
+                if (badge) badge.innerHTML = `<i class="fa-brands fa-android mr-1 text-green-400"></i> Android Device Detected`;
+                if (primaryText) primaryText.innerText = "Add to Google Calendar (1-Tap App Sync)";
+                if (primaryBtn) primaryBtn.onclick = () => { syncCalendarForDevice('google'); dismissReminderModal(); };
+            } else if (device.isMac) {
+                if (badge) badge.innerHTML = `<i class="fa-brands fa-apple mr-1"></i> Apple Mac Detected`;
+                if (primaryText) primaryText.innerText = "Open in Apple Calendar (iCal)";
+                if (primaryBtn) primaryBtn.onclick = () => { syncCalendarForDevice('apple'); dismissReminderModal(); };
+            } else if (device.isWindows) {
+                if (badge) badge.innerHTML = `<i class="fa-brands fa-windows mr-1 text-blue-400"></i> Windows PC Detected`;
+                if (primaryText) primaryText.innerText = "Add to Google Calendar (Browser)";
+                if (primaryBtn) primaryBtn.onclick = () => { syncCalendarForDevice('google'); dismissReminderModal(); };
+            } else {
+                if (badge) badge.innerHTML = `<i class="fa-solid fa-mobile-screen mr-1"></i> Universal Device Detected`;
+                if (primaryText) primaryText.innerText = "Add to Google Calendar";
+                if (primaryBtn) primaryBtn.onclick = () => { syncCalendarForDevice('google'); dismissReminderModal(); };
+            }
+            
+            modal.classList.remove('hidden');
         }
 
         // Live Countdown Clock Logic
@@ -4136,6 +4461,9 @@
 
         function initializeCelebration() {
             document.body.classList.add('js-active');
+            if (typeof startGrandLandingIntroSafe === 'function') {
+                startGrandLandingIntroSafe();
+            }
             verifyAdminUrlRoute();
 
             // Load Photos for All 3 Albums
@@ -4202,14 +4530,7 @@
             updateCountdownClock();
             setInterval(updateCountdownClock, 1000);
 
-            // 3. Auto-Reminder modal popup after 3.5 seconds
-            setTimeout(() => {
-                const alreadyPrompted = localStorage.getItem('pratishtha_reminder_prompted');
-                if (!alreadyPrompted) {
-                    document.getElementById('calendarPromptModal').classList.remove('hidden');
-                    localStorage.setItem('pratishtha_reminder_prompted', 'true');
-                }
-            }, 3500);
+            // 3. Calendar Sync is accessible via Header button and RSVP Pass card
 
             // 4. Generate 110 Rising Birthday Balloons with calm float duration
             const balloonHolder = document.getElementById('balloonsUniverse');
@@ -4582,9 +4903,11 @@
 
         
         // ====================================================
+        // ====================================================
         // GRAND LANDING INTRO ENGINE (2000 -> 16th Oct 2026)
         // ====================================================
         let introDismissed = false;
+        let introStarted = false;
 
         function dismissLandingIntro() {
             if (introDismissed) return;
@@ -4600,6 +4923,9 @@
         }
 
         function startGrandLandingIntro() {
+            if (introStarted) return;
+            introStarted = true;
+
             const overlay = document.getElementById('royalLandingIntroOverlay');
             if (!overlay) return;
 
@@ -4612,7 +4938,8 @@
             // 1. Launch floating balloons from bottom to top
             const balloonColors = ['#FFD700', '#FF69B4', '#FF1493', '#FFF0F5', '#BA55D3', '#E0A96D'];
             if (balloonContainer) {
-                for (let i = 0; i < 35; i++) {
+                balloonContainer.innerHTML = '';
+                for (let i = 0; i < 45; i++) {
                     const balloon = document.createElement('div');
                     balloon.className = 'intro-balloon-up';
                     const color = balloonColors[i % balloonColors.length];
@@ -4642,7 +4969,7 @@
 
                 const particles = [];
                 const colors = ['#FFD700', '#FF69B4', '#FFFFFF', '#BA55D3', '#00FFFF', '#FF1493'];
-                for (let p = 0; p < 90; p++) {
+                for (let p = 0; p < 110; p++) {
                     particles.push({
                         x: Math.random() * confettiCanvas.width,
                         y: Math.random() * confettiCanvas.height - confettiCanvas.height,
@@ -4687,6 +5014,11 @@
             const startTime = Date.now();
 
             const timerInterval = setInterval(() => {
+                if (introDismissed) {
+                    clearInterval(timerInterval);
+                    return;
+                }
+
                 const elapsed = Date.now() - startTime;
                 const progress = Math.min(1, elapsed / totalDuration);
 
@@ -4694,15 +5026,21 @@
                     progressEl.style.width = (progress * 100) + '%';
                 }
 
-                if (elapsed < 6000) {
+                if (elapsed < 5500) {
                     // Count rapidly from year 2000 to 2026
-                    const currentYear = Math.floor(2000 + (elapsed / 6000) * 26);
-                    if (counterEl) counterEl.innerText = currentYear;
-                } else if (elapsed < 8500) {
+                    const currentYear = Math.floor(2000 + (elapsed / 5500) * 26);
+                    if (counterEl) {
+                        counterEl.innerText = currentYear;
+                        counterEl.className = "font-royal text-4xl sm:text-6xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-royalGold via-pink-200 to-royalGold tracking-wider drop-shadow-[0_0_35px_rgba(255,215,0,0.8)] min-h-[70px] flex items-center justify-center";
+                    }
+                    if (subTextEl) {
+                        subTextEl.innerText = "A grand journey of elegance, laughter, and royalty begins...";
+                    }
+                } else if (elapsed < 8200) {
                     // Reveal 16th October 2026
                     if (counterEl) {
                         counterEl.innerText = "16th Oct 2026";
-                        counterEl.className = "font-royal text-3xl sm:text-5xl md:text-6xl font-extrabold text-royalGold tracking-tight leading-tight min-h-[70px] drop-shadow-[0_4px_30px_rgba(255,215,0,0.8)]";
+                        counterEl.className = "font-royal text-3xl sm:text-5xl md:text-6xl font-extrabold text-royalGold tracking-tight leading-tight min-h-[70px] drop-shadow-[0_4px_30px_rgba(255,215,0,0.9)] flex items-center justify-center animate-pulse";
                     }
                     if (subTextEl) {
                         subTextEl.innerText = "Turning 26 • The Grand Royal Celebration of Princess Pratishtha!";
@@ -4710,7 +5048,10 @@
                 } else {
                     if (counterEl) {
                         counterEl.innerText = "👑 Princess Pratishtha 👑";
-                        counterEl.className = "font-royal text-2xl sm:text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-royalGold via-pink-200 to-royalGold tracking-tight leading-tight min-h-[70px]";
+                        counterEl.className = "font-royal text-2xl sm:text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-royalGold via-pink-200 to-royalGold tracking-tight leading-tight min-h-[70px] flex items-center justify-center";
+                    }
+                    if (subTextEl) {
+                        subTextEl.innerText = "Welcome to Kanpur's Most Magnificent Birthday Celebration!";
                     }
                 }
 
@@ -4718,14 +5059,28 @@
                     clearInterval(timerInterval);
                     dismissLandingIntro();
                 }
-            }, 50);
+            }, 40);
         }
 
+        // Safeguard launch helper
+        function startGrandLandingIntroSafe() {
+            try {
+                startGrandLandingIntro();
+            } catch(e) {
+                console.error("Error starting landing intro:", e);
+            }
+        }
+
+        // Automatic page load execution
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeCelebration);
+            document.addEventListener('DOMContentLoaded', () => {
+                initializeCelebration();
+                startGrandLandingIntroSafe();
+            });
         } else {
             initializeCelebration();
+            startGrandLandingIntroSafe();
         }
-    </script>
+        </script>
 </body>
 </html>
